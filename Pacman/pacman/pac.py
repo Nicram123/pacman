@@ -55,10 +55,10 @@ class Pacman:
         elif self.current_rows == 15 and self.current_cols > 28:
             self.current_cols = 0
 
-    def changePos(self):
+    def changePos(self, flag):
         self.checkIfNotCollisionDuringMoving()
         self.rememberTheLastKeyPressed()
-        self.incrementicTrafficParameters()
+        self.incrementicTrafficParameters(flag)
 
     def rotatePacman(self):
         for i in range(len(self.pacman_images)):
@@ -76,38 +76,75 @@ class Pacman:
             self.rotatePacman()
             self.rotate = True
 
-    def incrementicTrafficParameters(self):
+    def incrementicTrafficParameters(self, flag):
         if self.temp[K_LEFT]:
             if self.collision(self.current_rows, self.current_cols - 1):
                 self.current_cols -= 1
-                self.checkRotateRate()
+                if flag:
+                    self.checkRotateRate()
         if self.temp[K_RIGHT]:
             if self.collision(self.current_rows, self.current_cols + 1):
-                self.current_cols += 1
-                self.checkRotateRate()
+                self.current_cols += 1 
+                if flag:
+                    self.checkRotateRate()
         if self.temp[K_UP]:
             if self.collision(self.current_rows - 1, self.current_cols):
                 self.current_rows -= 1
-                self.checkRotateRate()
+                if flag:
+                    self.checkRotateRate()
         if self.temp[K_DOWN]:
             if self.collision(self.current_rows + 1, self.current_cols):
-                self.current_rows += 1
-                self.checkRotateRate()
+                self.current_rows += 1 
+                if flag:
+                    self.checkRotateRate()
+    
+    # {'left': 0, 'right': 1, 'up': 2, 'down': 3} 
+    
+    # poruszanie 
+    def incrementicTrafficParametersRL(self, action):
+        if action == 0: # left 
+            if self.collision(self.current_rows, self.current_cols - 1):
+                self.current_cols -= 1
+        if action == 1: # right 
+            if self.collision(self.current_rows, self.current_cols + 1):
+                self.current_cols += 1 
+        if action == 2: # up 
+            if self.collision(self.current_rows - 1, self.current_cols):
+                self.current_rows -= 1
+        if action == 3: # down 
+            if self.collision(self.current_rows + 1, self.current_cols):
+                self.current_rows += 1 
+
         
         
         
-    def increasePoints(self, screen, font, pacmanBoard):
+    def increasePoints(self, screen, font, pacmanBoard, flag=True, is_reward=False): 
+        # mała kropka 
+        reward = 0 
         if pacmanBoard[self.current_rows][self.current_cols] == 1:
             self.points += 10
-            pygame.draw.circle(screen, 'black', (self.current_cols * num2 + (0.5 * num2), self.current_rows * num1 + (0.5 * num1)), 4)
+            if flag:
+                pygame.draw.circle(screen, 'black', (self.current_cols * num2 + (0.5 * num2), self.current_rows * num1 + (0.5 * num1)), 4)
             pacmanBoard[self.current_rows][self.current_cols] = 0
+            if is_reward: 
+                reward += 10 
+                return reward
+        # duża kropka 
         elif pacmanBoard[self.current_rows][self.current_cols] == 2:
             self.points += 50
-            pygame.draw.circle(screen, 'black', (self.current_cols * num2 + (0.5 * num2), self.current_rows * num1 + (0.5 * num1)), 10)
-            pacmanBoard[self.current_rows][self.current_cols] = 0
-
-        text = font.render(str(self.points), True, (255, 255, 255))
-        screen.blit(text, (750, 770))
+            
+            if flag: 
+                pygame.draw.circle(screen, 'black', (self.current_cols * num2 + (0.5 * num2), self.current_rows * num1 + (0.5 * num1)), 10)
+            pacmanBoard[self.current_rows][self.current_cols] = 0 
+            if is_reward: 
+                reward += 50 
+                return reward
+        if is_reward:
+            return reward
+        
+        if flag: 
+            text = font.render(str(self.points), True, (255, 255, 255))
+            screen.blit(text, (750, 770))
 
     def rememberTheLastKeyPressed(self):
         if self.pos == pygame.K_LEFT:
@@ -127,7 +164,7 @@ class Pacman:
     def checkIfNotCollisionDuringMoving(self):
 
         arrow_keys = [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN]
-
+        
         self.keys = pygame.key.get_pressed()
 
         for i in range(len(arrow_keys)):
@@ -151,18 +188,25 @@ class Pacman:
 
                 self.temp = self.keys
 
-    def move(self, screen):
+    def move(self, screen, flag=True):
 
-        self.changePos()
+        self.changePos(flag)
         self.teleporter()
-        screen.blit(self.pacman_images_copy[self.ix], (self.current_cols * num2 + (0.2 * num2), self.current_rows * num1 + (0.2 * num1)))
+        if flag:
+            screen.blit(self.pacman_images_copy[self.ix], (self.current_cols * num2 + (0.2 * num2), self.current_rows * num1 + (0.2 * num1)))
         self.ix += 1
         if self.ix > len(self.pacman_images_copy) - 1:
             self.ix = 0
 
+    #def collision(self, curR, curC):
+    #    if 0 <= curC <= 29:
+    #        if (boards[curR][curC] != 4 and boards[curR][curC] != 3 and boards[curR][curC] != 9 and boards[curR][curC] != 7 and boards[curR][curC] != 8 and boards[curR][curC] != 5 and boards[curR][curC] != 6):
+    #            return True
+    #        else:
+    #            return False
+            
     def collision(self, curR, curC):
-        if 0 <= curC <= 29:
-            if (boards[curR][curC] != 4 and boards[curR][curC] != 3 and boards[curR][curC] != 9 and boards[curR][curC] != 7 and boards[curR][curC] != 8 and boards[curR][curC] != 5 and boards[curR][curC] != 6):
-                return True
-            else:
-                return False
+        if not (0 <= curR < len(boards) and 0 <= curC < len(boards[0])):
+            return False  
+        walls = {3, 4, 5, 6, 7, 8, 9}
+        return boards[curR][curC] not in walls

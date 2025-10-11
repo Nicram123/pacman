@@ -33,19 +33,16 @@ while run:
     if event.type == pygame.QUIT:
       run = False
       
-  obj.draw_board(screen,pacmanBoard, pacman, font)
-  ghost.freeGhosts(screen, obj, font ,pacman, ghost)
-  
+  obj.draw_board(screen,pacmanBoard, pacman, font) # 
+  ghost.freeGhosts(screen, obj, font ,pacman, pacmanBoard, ghost) #
   pacman.increasePoints(screen, font, pacmanBoard)
-  
   ghost.killingGhostByPacman(pacman, screen, font, obj, (13, 14))
-  
-  ghost.returningToTheGateAfterCollision(pacman, screen, font)
+  ghost.returningToTheGateAfterCollision(pacman, screen, font, ghost, obj, pacmanBoard) # ghost, obj, pacmanBoard
   pacman.move(screen)
   ghost.killingGhostByPacman(pacman, screen, font, obj, (13, 14))
+  ghost.returningToTheGateAfterCollision(pacman, screen, font, ghost, obj, pacmanBoard)
   
-  ghost.returningToTheGateAfterCollision(pacman, screen, font)
-  
+  print(pacmanBoard)
   if pacman.ifAllPointsCollected(pacmanBoard):
     pacmanBoard = copy.deepcopy(boards) # czy działa z samym copy ?? 
   

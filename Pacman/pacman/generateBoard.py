@@ -4,6 +4,7 @@ from pacman.constants import BLACK, width, height, SQUARE_SIZE, WHITE, HEIGHT, W
 import math
 import copy
 
+
 class Board:
   
   def __init__(self):
