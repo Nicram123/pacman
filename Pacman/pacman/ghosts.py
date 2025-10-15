@@ -19,10 +19,10 @@ class Ghosts():
         
         
         self.listOfGhosts = [
-            pygame.transform.scale(pygame.image.load("blue.png"), (cell_size, cell_size)),
-            pygame.transform.scale(pygame.image.load("pink.png"), (cell_size, cell_size)),
-            pygame.transform.scale(pygame.image.load("orange.png"), (cell_size, cell_size)),
-            pygame.transform.scale(pygame.image.load("red.png"), (cell_size, cell_size)), 
+            pygame.transform.scale(pygame.image.load("red.png"), (cell_size, cell_size)),
+            #pygame.transform.scale(pygame.image.load("orange.png"), (cell_size, cell_size)), 
+            #pygame.transform.scale(pygame.image.load("pink.png"), (cell_size, cell_size)),
+            #pygame.transform.scale(pygame.image.load("blue.png"), (cell_size, cell_size)),
             #pygame.transform.scale(pygame.image.load("red.png"), (cell_size, cell_size))
         ]
         self.collision_free = []
@@ -48,16 +48,16 @@ class Ghosts():
                 self.listOfObject.pop(ix) 
                 if hasattr(ghost, "color") and ghost.color == 'red':  
                     obj = Blinky(11, 13) 
-                elif hasattr(ghost, "color") and ghost.color == 'pink': 
-                    obj = Pinky(11, 13)
-                elif hasattr(ghost, "color") and ghost.color == 'blue':
-                    obj = Inky(11, 13) 
-                elif hasattr(ghost, "color") and ghost.color == 'orange':
-                    obj = Clyde(11, 13) 
-                else: 
-                    obj = Ghosts(11, 13)
+                #elif hasattr(ghost, "color") and ghost.color == 'pink': 
+                #    obj = Pinky(11, 13)
+                #elif hasattr(ghost, "color") and ghost.color == 'blue':
+                #    obj = Inky(11, 13) 
+                #elif hasattr(ghost, "color") and ghost.color == 'orange':
+                #    obj = Clyde(11, 13) 
+                #else: 
+                #    obj = Ghosts(11, 13)
                 self.listOfObject.insert(ix, obj)
-                reward = 200
+                reward = 0 # 200
                 if is_reward: 
                     return reward
         if is_reward: 
@@ -69,11 +69,12 @@ class Ghosts():
         if self.collisionWithPacman(pacman)[0]: # True, ghst, ix 
             self.listOfObject.clear()
             pacman.lifePoints -= 1
-            reward = -500 
+            reward = -100 # -500
             if pacman.lifePoints > -1:
                 pacman.lifes.pop(-1)
             pacman.current_rows = 23
             pacman.current_cols = 12
+            
             self.create_ghost_object(screen, flag)
             ghost.leafingTheCage(board, screen, pacmanBoard, pacman, font, flag)
             
@@ -102,14 +103,14 @@ class Ghosts():
 
     def create_ghost_object(self, screen, flag=True): 
         for x in range(len(self.listOfGhosts)):
-            if x == 3:
+            if x == 0: # 0 
                 obj = Blinky(15, 12)    
-            elif x == 1: 
-                obj = Pinky(15, 15)
-            elif x == 0:
-                obj = Inky(15, 14) 
-            elif x == 2:
-                obj = Clyde(15, 13) 
+            #elif x == 1: 
+            #    obj = Pinky(15, 15)
+            #elif x == 1:
+            #    obj = Inky(15, 14) 
+            #elif x == 1:
+            #    obj = Clyde(15, 13) 
             
             self.listOfObject.append(obj) 
             if flag:
@@ -150,13 +151,13 @@ class Ghosts():
         blinky = self.listOfObject[-1]
         for ix, obj in enumerate(self.listOfObject):
             if hasattr(obj, "color") and obj.color == 'red':
-                obj.move(pacman, board.copyBoard, ghost)
+                obj.move(pacman, pacmanBoard, ghost)
             elif hasattr(obj, "color") and obj.color == 'orange': 
-                obj.move(pacman, board.copyBoard, ghost)
+                obj.move(pacman, pacmanBoard, ghost)
             elif hasattr(obj, "color") and obj.color == 'blue':
-                obj.move(pacman, blinky ,board.copyBoard, ghost)
+                obj.move(pacman, blinky ,pacmanBoard, ghost)
             elif hasattr(obj, "color") and obj.color == 'pink':
-                obj.move(pacman, board.copyBoard, ghost)
+                obj.move(pacman, pacmanBoard, ghost)
             if flag: 
                 obj.displayGhosts(screen, ix)
 
@@ -215,10 +216,10 @@ class Ghosts():
     def returnToNormalSpirits(self):
         for obj in self.listOfObject:
             obj.listOfGhosts = [
-                pygame.transform.scale(pygame.image.load("blue.png"), (cell_size, cell_size)),
-                pygame.transform.scale(pygame.image.load("pink.png"), (cell_size, cell_size)),
-                pygame.transform.scale(pygame.image.load("orange.png"), (cell_size, cell_size)),
                 pygame.transform.scale(pygame.image.load("red.png"), (cell_size, cell_size)), 
+                #pygame.transform.scale(pygame.image.load("orange.png"), (cell_size, cell_size)),
+                #pygame.transform.scale(pygame.image.load("pink.png"), (cell_size, cell_size)),
+                #pygame.transform.scale(pygame.image.load("blue.png"), (cell_size, cell_size)),
                 #pygame.transform.scale(pygame.image.load("red.png"), (cell_size, cell_size))
                 
             ] 
@@ -253,12 +254,17 @@ class Ghosts():
 
 
 
-    def powerUpFunc(self, pacman):
-        if pacman.powerUp():
+    def powerUpFunc(self, pacman, board):
+        reward = 0 
+        if pacman.powerUp(board):
+            reward = reward + 5 
+            print('reward +5 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            board[pacman.current_rows][pacman.current_cols] = 0 
             self.start_time = pygame.time.get_ticks()  # Pobierz czas rozpoczęcia mocy power-up
             self.setPowerUpPictures()
             self.powerup = True
             self.powerUpForEach(True)
+        
 
         current_time = pygame.time.get_ticks()
         elapsed_time = current_time - self.start_time  # Oblicz upływający czas od rozpoczęcia mocy power-up
@@ -266,13 +272,14 @@ class Ghosts():
             self.returnToNormalSpirits()
             self.powerup = False
             self.powerUpForEach(False)
+        return reward 
 
     def powerUpForEach(self, logic):
         for x in self.listOfObject:
             x.powerup = logic
 
     def normalMove(self, screen, board, font, pacman, ghost):
-        ghost.powerUpFunc(pacman)
+        # ghost.powerUpFunc(pacman)
 
         pos = ["left", "right", "up", "down"]
 
@@ -384,7 +391,7 @@ class Inky(Ghosts):
     def move(self, pacman, blinky, board, ghost):
         self.move_timer += 1
         
-        if ghost.powerup == False:
+        if True or ghost.powerup == False:
             if self.move_timer % 5 == 0 or not self.path:
                 self.update_target(pacman, blinky, board)
                 start = (self.current_rows, self.current_cols)
@@ -396,18 +403,18 @@ class Inky(Ghosts):
                     next_tile = self.path[self.step_index]
                     self.current_rows, self.current_cols = next_tile
                     self.step_index += 1        
-        else:
-            if self.move_timer % self.speed == 0:
-                # Znajdź najlepsze pole do ucieczki
-                escape_target = self.get_escape_direction_bfs(ghost=self, pacman=pacman, board=board)
-                start = (self.current_rows, self.current_cols)
-                # Użyj BFS do wygenerowania ścieżki do tego punktu
-                self.path = self.bfs(board, start, escape_target)
-                self.step_index = 0
-                if self.path:
-                    next_tile = self.path[self.step_index]
-                    self.current_rows, self.current_cols = next_tile
-                    self.step_index += 1
+        #else:
+        #    if self.move_timer % self.speed == 0:
+        #        # Znajdź najlepsze pole do ucieczki
+        #        escape_target = self.get_escape_direction_bfs(ghost=self, pacman=pacman, board=board)
+        #        start = (self.current_rows, self.current_cols)
+        #        # Użyj BFS do wygenerowania ścieżki do tego punktu
+        #        self.path = self.bfs(board, start, escape_target)
+        #        self.step_index = 0
+        #        if self.path:
+        #            next_tile = self.path[self.step_index]
+        #            self.current_rows, self.current_cols = next_tile
+        #            self.step_index += 1
 
             
 class Clyde(Ghosts):
@@ -440,7 +447,7 @@ class Clyde(Ghosts):
     def move(self, pacman, board, ghost):
         self.move_timer += 1
         
-        if ghost.powerup == False:
+        if True or ghost.powerup == False:
             # Aktualizuj target co klatkę i BFS co 1-2 klatki
             if not self.path or self.move_timer % 2 == 0:
                 self.update_target(pacman)
@@ -454,22 +461,23 @@ class Clyde(Ghosts):
                     next_tile = self.path[self.step_index]
                     self.current_rows, self.current_cols = next_tile
                     self.step_index += 1
+                    
         
-        else:
-            # W trybie ucieczki duch ucieka od Pac-Mana
-            if self.move_timer % self.speed == 0:
-                # Znajdź najlepsze pole do ucieczki
-                escape_target = self.get_escape_direction_bfs(ghost=self, pacman=pacman, board=board)
-                start = (self.current_rows, self.current_cols)
-                # Użyj BFS do wygenerowania ścieżki do tego punktu
-                self.path = self.bfs(board, start, escape_target)
-                self.step_index = 0
-
-                # Jeśli ścieżka istnieje, wykonaj ruch
-                if self.path:
-                    next_tile = self.path[self.step_index]
-                    self.current_rows, self.current_cols = next_tile
-                    self.step_index += 1
+        #else:
+        #    # W trybie ucieczki duch ucieka od Pac-Mana
+        #    if self.move_timer % self.speed == 0:
+        #        # Znajdź najlepsze pole do ucieczki
+        #        escape_target = self.get_escape_direction_bfs(ghost=self, pacman=pacman, board=board)
+        #        start = (self.current_rows, self.current_cols)
+        #        # Użyj BFS do wygenerowania ścieżki do tego punktu
+        #        self.path = self.bfs(board, start, escape_target)
+        #        self.step_index = 0
+        #
+        #        # Jeśli ścieżka istnieje, wykonaj ruch
+        #        if self.path:
+        #            next_tile = self.path[self.step_index]
+        #            self.current_rows, self.current_cols = next_tile
+        #            self.step_index += 1
                     
 
 
@@ -491,10 +499,7 @@ class Pinky(Ghosts):
         self.move_timer = 0
         self.speed = 2  # trochę wolniejsza
 
-  
-
- 
-       
+        
   def update_target(self, pacman, board):
         rows, cols = len(board), len(board[0])
         if pacman.keys[pygame.K_UP]:
@@ -515,7 +520,7 @@ class Pinky(Ghosts):
         start = (self.current_rows, self.current_cols)
         self.move_timer += 1
         
-        if ghost.powerup == False: 
+        if True or ghost.powerup == False: 
             # Co kilka klatek przelicz BFS
             if self.move_timer % 2 == 0 or not self.path:
                 self.path = self.bfs(board, start, self.target)
@@ -526,18 +531,18 @@ class Pinky(Ghosts):
                     next_tile = self.path[self.step_index]
                     self.current_rows, self.current_cols = next_tile
                     self.step_index += 1
-        else:
-            if self.move_timer % self.speed == 0:
-                # Znajdź najlepsze pole do ucieczki
-                escape_target = self.get_escape_direction_bfs(ghost=self, pacman=pacman, board=board)
-                start = (self.current_rows, self.current_cols)
-                # Użyj BFS do wygenerowania ścieżki do tego punktu
-                self.path = self.bfs(board, start, escape_target)
-                self.step_index = 0
-                if self.path:
-                    next_tile = self.path[self.step_index]
-                    self.current_rows, self.current_cols = next_tile
-                    self.step_index += 1
+        #else:
+        #    if self.move_timer % self.speed == 0:
+        #        # Znajdź najlepsze pole do ucieczki
+        #        escape_target = self.get_escape_direction_bfs(ghost=self, pacman=pacman, board=board)
+        #        start = (self.current_rows, self.current_cols)
+        #        # Użyj BFS do wygenerowania ścieżki do tego punktu
+        #        self.path = self.bfs(board, start, escape_target)
+        #        self.step_index = 0
+        #        if self.path:
+        #            next_tile = self.path[self.step_index]
+        #            self.current_rows, self.current_cols = next_tile
+        #            self.step_index += 1
 
 
 class Blinky(Ghosts): 
@@ -559,10 +564,10 @@ class Blinky(Ghosts):
   
       
   def move(self, pacman, board, ghost):
-        ghost.powerUpFunc(pacman)
+        temp = ghost.powerUpFunc(pacman, board)
         self.update_target(pacman) 
         self.move_timer += 1
-        if ghost.powerup == False: 
+        if True or ghost.powerup == False: 
             # Co 10 klatek planuj nową ścieżkę
             if self.move_timer % 10 == 0 or not self.path:
                 start = (self.current_rows, self.current_cols)
@@ -576,15 +581,15 @@ class Blinky(Ghosts):
                     self.current_rows, self.current_cols = next_tile = next_tile
                     self.step_index += 1
                     
-        else:
-            if self.move_timer % self.speed == 0:
-                # Znajdź najlepsze pole do ucieczki
-                escape_target = self.get_escape_direction_bfs(ghost=self, pacman=pacman, board=board)
-                start = (self.current_rows, self.current_cols)
-                # Użyj BFS do wygenerowania ścieżki do tego punktu
-                self.path = self.bfs(board, start, escape_target)
-                self.step_index = 0
-                if self.path:
-                    next_tile = self.path[self.step_index]
-                    self.current_rows, self.current_cols = next_tile
-                    self.step_index += 1
+        #else:
+        #    if self.move_timer % self.speed == 0:
+        #        # Znajdź najlepsze pole do ucieczki
+        #        escape_target = self.get_escape_direction_bfs(ghost=self, pacman=pacman, board=board)
+        #        start = (self.current_rows, self.current_cols)
+        #        # Użyj BFS do wygenerowania ścieżki do tego punktu
+        #        self.path = self.bfs(board, start, escape_target)
+        #        self.step_index = 0
+        #        if self.path:
+        #            next_tile = self.path[self.step_index]
+        #            self.current_rows, self.current_cols = next_tile
+        #            self.step_index += 1

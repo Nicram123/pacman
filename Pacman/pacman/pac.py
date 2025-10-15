@@ -14,6 +14,7 @@ class Pacman:
         self.temp = self.keys
         self.r = self.keys
         self.pos = None
+        self.pos_rl = None 
         self.rotate = False
         self.lifes = [
             pygame.transform.scale(pygame.image.load("1.png"), (cell_size, cell_size)),
@@ -39,12 +40,13 @@ class Pacman:
         for j in range(len(pacmanBoard[i])):
           if pacmanBoard[i][j] == 1 or pacmanBoard[i][j] == 2:
             return False
+      
       return True
     
     
 
-    def powerUp(self):
-        if boards[self.current_rows][self.current_cols] == 2:
+    def powerUp(self, board):
+        if board[self.current_rows][self.current_cols] == 2:
             return True
         else:
             return False
@@ -62,13 +64,13 @@ class Pacman:
 
     def rotatePacman(self):
         for i in range(len(self.pacman_images)):
-            if self.collision(self.current_rows - 1, self.current_cols) and self.pos == pygame.K_UP:
+            if self.collision(self.current_rows - 1, self.current_cols) and self.pos_rl == 2: # self.pos == pygame.K_UP
                 self.pacman_images_copy[i] = pygame.transform.rotate(self.pacman_images[i], 90)
-            elif self.collision(self.current_rows, self.current_cols - 1) and self.pos == pygame.K_LEFT:
+            elif self.collision(self.current_rows, self.current_cols - 1) and self.pos_rl == 0:
                 self.pacman_images_copy[i] = pygame.transform.rotate(self.pacman_images[i], 180)
-            elif self.collision(self.current_rows, self.current_cols + 1) and self.pos == pygame.K_RIGHT:
+            elif self.collision(self.current_rows, self.current_cols + 1) and self.pos_rl == 1:
                 self.pacman_images_copy[i] = pygame.transform.rotate(self.pacman_images[i], 0)
-            elif self.collision(self.current_rows + 1, self.current_cols) and self.pos == pygame.K_DOWN:
+            elif self.collision(self.current_rows + 1, self.current_cols) and self.pos_rl == 3:
                 self.pacman_images_copy[i] = pygame.transform.rotate(self.pacman_images[i], 270)
 
     def checkRotateRate(self):
@@ -100,23 +102,41 @@ class Pacman:
     
     # {'left': 0, 'right': 1, 'up': 2, 'down': 3} 
     
-    # poruszanie 
-    def incrementicTrafficParametersRL(self, action):
-        if action == 0: # left 
-            if self.collision(self.current_rows, self.current_cols - 1):
-                self.current_cols -= 1
-        if action == 1: # right 
-            if self.collision(self.current_rows, self.current_cols + 1):
-                self.current_cols += 1 
-        if action == 2: # up 
-            if self.collision(self.current_rows - 1, self.current_cols):
-                self.current_rows -= 1
-        if action == 3: # down 
-            if self.collision(self.current_rows + 1, self.current_cols):
-                self.current_rows += 1 
 
         
-        
+    def incrementicTrafficParametersRL(self, action, flag=True):
+        old_pos = self.pos_rl
+        if action == 0:
+            self.pos_rl = 0
+        elif action == 1:
+            self.pos_rl = 1
+        elif action == 2:
+            self.pos_rl = 2
+        elif action == 3:
+            self.pos_rl = 3
+        if old_pos != self.pos_rl:
+            self.rotate = False  
+        if action == 0:  # left
+            if self.collision(self.current_rows, self.current_cols - 1):
+                self.current_cols -= 1
+                if flag:
+                    self.checkRotateRate()
+        elif action == 1:  # right
+            if self.collision(self.current_rows, self.current_cols + 1):
+                self.current_cols += 1
+                if flag:
+                    self.checkRotateRate()
+        elif action == 2:  # up
+            if self.collision(self.current_rows - 1, self.current_cols):
+                self.current_rows -= 1
+                if flag:
+                    self.checkRotateRate()
+        elif action == 3:  # down
+            if self.collision(self.current_rows + 1, self.current_cols):
+                self.current_rows += 1
+                if flag:
+                    self.checkRotateRate()
+   
         
     def increasePoints(self, screen, font, pacmanBoard, flag=True, is_reward=False): 
         # mała kropka 
@@ -127,18 +147,17 @@ class Pacman:
                 pygame.draw.circle(screen, 'black', (self.current_cols * num2 + (0.5 * num2), self.current_rows * num1 + (0.5 * num1)), 4)
             pacmanBoard[self.current_rows][self.current_cols] = 0
             if is_reward: 
-                reward += 10 
+                reward += 1
+                print('reward +1')
                 return reward
         # duża kropka 
         elif pacmanBoard[self.current_rows][self.current_cols] == 2:
-            self.points += 50
+            self.points += 50 # 50
             
             if flag: 
                 pygame.draw.circle(screen, 'black', (self.current_cols * num2 + (0.5 * num2), self.current_rows * num1 + (0.5 * num1)), 10)
             pacmanBoard[self.current_rows][self.current_cols] = 0 
-            if is_reward: 
-                reward += 50 
-                return reward
+  
         if is_reward:
             return reward
         
@@ -190,7 +209,7 @@ class Pacman:
 
     def move(self, screen, flag=True):
 
-        self.changePos(flag)
+        #self.changePos(flag)
         self.teleporter()
         if flag:
             screen.blit(self.pacman_images_copy[self.ix], (self.current_cols * num2 + (0.2 * num2), self.current_rows * num1 + (0.2 * num1)))
@@ -198,15 +217,12 @@ class Pacman:
         if self.ix > len(self.pacman_images_copy) - 1:
             self.ix = 0
 
-    #def collision(self, curR, curC):
-    #    if 0 <= curC <= 29:
-    #        if (boards[curR][curC] != 4 and boards[curR][curC] != 3 and boards[curR][curC] != 9 and boards[curR][curC] != 7 and boards[curR][curC] != 8 and boards[curR][curC] != 5 and boards[curR][curC] != 6):
-    #            return True
-    #        else:
-    #            return False
+
             
     def collision(self, curR, curC):
         if not (0 <= curR < len(boards) and 0 <= curC < len(boards[0])):
             return False  
         walls = {3, 4, 5, 6, 7, 8, 9}
-        return boards[curR][curC] not in walls
+        
+        x = boards[curR][curC] not in walls
+        return x 
