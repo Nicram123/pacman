@@ -17,16 +17,16 @@ class Pacman:
         self.pos_rl = None 
         self.rotate = False
         self.lifes = [
-            pygame.transform.scale(pygame.image.load("1.png"), (cell_size, cell_size)),
-            pygame.transform.scale(pygame.image.load("1.png"), (cell_size, cell_size))
+            pygame.transform.scale(pygame.image.load("pictures/1.png"), (cell_size, cell_size)),
+            pygame.transform.scale(pygame.image.load("pictures/1.png"), (cell_size, cell_size))
         ]
         self.lifes_pos = [(5, 750), (40, 750)]
         self.points = 0
         self.pacman_images = [
-            pygame.transform.scale(pygame.image.load("1.png"), (cell_size, cell_size)),
-            pygame.transform.scale(pygame.image.load("2.png"), (cell_size, cell_size)),
-            pygame.transform.scale(pygame.image.load("3.png"), (cell_size, cell_size)),
-            pygame.transform.scale(pygame.image.load("4.png"), (cell_size, cell_size))
+            pygame.transform.scale(pygame.image.load("pictures/1.png"), (cell_size, cell_size)),
+            pygame.transform.scale(pygame.image.load("pictures/2.png"), (cell_size, cell_size)),
+            pygame.transform.scale(pygame.image.load("pictures/3.png"), (cell_size, cell_size)),
+            pygame.transform.scale(pygame.image.load("pictures/4.png"), (cell_size, cell_size))
         ]
         self.pacman_images_copy = self.pacman_images.copy()
         

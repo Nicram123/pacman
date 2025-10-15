@@ -19,7 +19,7 @@ class Ghosts():
         
         
         self.listOfGhosts = [
-            pygame.transform.scale(pygame.image.load("red.png"), (cell_size, cell_size)),
+            pygame.transform.scale(pygame.image.load("pictures/red.png"), (cell_size, cell_size)),
             #pygame.transform.scale(pygame.image.load("orange.png"), (cell_size, cell_size)), 
             #pygame.transform.scale(pygame.image.load("pink.png"), (cell_size, cell_size)),
             #pygame.transform.scale(pygame.image.load("blue.png"), (cell_size, cell_size)),
@@ -211,12 +211,12 @@ class Ghosts():
 
     def setPowerUpPictures(self):
         for obj in self.listOfObject:
-            obj.listOfGhosts = [pygame.transform.scale(pygame.image.load("powerup.png"), (cell_size, cell_size))] * 4
+            obj.listOfGhosts = [pygame.transform.scale(pygame.image.load("pictures/powerup.png"), (cell_size, cell_size))] * 4
 
     def returnToNormalSpirits(self):
         for obj in self.listOfObject:
             obj.listOfGhosts = [
-                pygame.transform.scale(pygame.image.load("red.png"), (cell_size, cell_size)), 
+                pygame.transform.scale(pygame.image.load("pictures/red.png"), (cell_size, cell_size)), 
                 #pygame.transform.scale(pygame.image.load("orange.png"), (cell_size, cell_size)),
                 #pygame.transform.scale(pygame.image.load("pink.png"), (cell_size, cell_size)),
                 #pygame.transform.scale(pygame.image.load("blue.png"), (cell_size, cell_size)),
