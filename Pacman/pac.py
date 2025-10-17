@@ -1,6 +1,6 @@
 import pygame
-from pacman.board import boards
-from pacman.constants import cell_size, color, num1, num2
+from Pacman.board import boards
+from Pacman.constants import cell_size, color, num1, num2
 from pygame.locals import *
 import copy
 

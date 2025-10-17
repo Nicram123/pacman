@@ -1,7 +1,7 @@
-from pacman.constants import cell_size, num1, num2, POWER_UP_DURATION
+from Pacman.constants import cell_size, num1, num2, POWER_UP_DURATION
 import pygame
 import random
-from pacman.board import boards
+from Pacman.board import boards
 from collections import deque 
 
 

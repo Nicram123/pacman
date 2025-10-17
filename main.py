@@ -1,9 +1,9 @@
 import pygame
-from pacman.board import boards
-from pacman.generateBoard import Board
-from pacman.constants import HEIGHT, WIDTH
-from pacman.pac import Pacman
-from pacman.ghosts import Ghosts
+from Pacman.board import boards
+from Pacman.generateBoard import Board
+from Pacman.constants import HEIGHT, WIDTH
+from Pacman.pac import Pacman
+from Pacman.ghosts import Ghosts
 from tensorflow.keras.models import load_model
 import numpy as np
 import copy 

@@ -1,6 +1,6 @@
-from pacman.board import boards
+from Pacman.board import boards
 import pygame
-from pacman.constants import BLACK, width, height, SQUARE_SIZE, WHITE, HEIGHT, WIDTH, color, num1, num2
+from Pacman.constants import BLACK, width, height, SQUARE_SIZE, WHITE, HEIGHT, WIDTH, color, num1, num2
 import math
 import copy
 

@@ -4,11 +4,11 @@ from tensorflow.keras.layers import Dense, Input
 import numpy as np
 import copy
 from collections import deque
-from pacman.board import boards
-from pacman.generateBoard import Board
-from pacman.ghosts import Ghosts
-from pacman.pac import Pacman
-from pacman.constants import WIDTH, HEIGHT
+from Pacman.board import boards
+from Pacman.generateBoard import Board
+from Pacman.ghosts import Ghosts
+from Pacman.pac import Pacman
+from Pacman.constants import WIDTH, HEIGHT
 
 
 class PacmanEnv:

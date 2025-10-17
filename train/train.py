@@ -5,7 +5,7 @@ import time
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import Huber
 from train.neural_network import build_q_network, PacmanEnv
-from pacman.board import boards
+from Pacman.board import boards
 import copy
 from tensorflow.keras.models import load_model
 
