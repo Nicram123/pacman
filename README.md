@@ -17,3 +17,4 @@ Oto przykład działania Pacmana po treningu:
 * Na razie najlepszy z modeli `pacman_ai_ep2600.keras` z folderu `models4` działa najlpiej ale jest on w stanie przejść tylko jeden raz całą planszę, potem się myli 
 ## Licencja
 Projekt jest udostępniony na licencji MIT.
+![pacman](https://github.com/user-attachments/assets/c181bf7c-2bf3-46f5-a230-c80b4cad2b9a)
