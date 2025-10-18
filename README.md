@@ -15,7 +15,8 @@ pip install pygame
 python -m train.train
 ```
 lub skorzystaj z gotowych modeli w folderze `model4`
-7. Uruchom program z poziomu `main.py`
+
+7. Uruchom program z poziomu `main.py`: 
 ```bash
 python main.py
 ```
