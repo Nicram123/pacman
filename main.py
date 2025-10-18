@@ -33,7 +33,7 @@ ghost.create_ghost_object(screen)
 
 env = PacmanEnv()
 # 2600 the best 
-q_network = load_model(r"C:\Users\marci\pacman\models4\pacman_ai_ep2600.keras", compile=False)
+q_network = load_model(r"C:\Users\marci\pacman_Reinforcement_Learning\models4\pacman_ai_ep2600.keras", compile=False)
 while run:
     timer.tick(fps)
     screen.fill('black')
