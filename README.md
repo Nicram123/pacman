@@ -20,8 +20,6 @@ lub skorzystaj z gotowych modeli w folderze `model4`
 ```bash
 python main.py
 ```
-5. Sterowanie: 
-steruj pacmanem strzałkami
 
 ## Trening
 Trening Pacmana odbywa się w kilku etapach:
