@@ -8,10 +8,14 @@ git clone git@github.com:Nicram123/pacman_Reinforcement_Learning.git
 ```                                                                      
 3. Zainstaluj wymagane biblioteki:
 ```bash
-`pip install pygame`
+pip install pygame
 ```
-5. Uruchom trening: ```bash python -m train.train``` lub skorzystaj z gotowych modeli w folderze `model4`
-6. Uruchom program z poziomu `main.py`
+5. Uruchom trening:
+```bash
+python -m train.train
+```
+lub skorzystaj z gotowych modeli w folderze `model4`
+7. Uruchom program z poziomu `main.py`
 ```bash
 python main.py
 ```
