@@ -6,20 +6,23 @@ Ten projekt to implementacja gry Pacman z wykorzystaniem uczenia ze wzmocnieniem
 ```bash
 git clone git@github.com:Nicram123/pacman_Reinforcement_Learning.git
 ```                                                                      
-3. Zainstaluj wymagane biblioteki:
+2. Zainstaluj wymagane biblioteki:
 ```bash
 pip install pygame
 ```
-5. Uruchom trening:
+3. Uruchom trening:
 ```bash
 python -m train.train
 ```
 lub skorzystaj z gotowych modeli w folderze `model4`
 
-7. Uruchom program z poziomu `main.py`: 
+4. Uruchom program z poziomu `main.py`: 
 ```bash
 python main.py
 ```
+5. Sterowanie: 
+steruj pacmanem strzałkami
+
 ## Trening
 Trening Pacmana odbywa się w kilku etapach:
 * Początkowo Pacman uczy się poruszania po planszy bez duchów.
