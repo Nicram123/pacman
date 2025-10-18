@@ -2,10 +2,16 @@
 ## Opis projektu
 Ten projekt to implementacja gry Pacman z wykorzystaniem uczenia ze wzmocnieniem (Reinforcement Learning). Celem projektu jest nauczenie Pacmana poruszania się po planszy i unikania duchów.
 ## Instalacja i uruchomienie
-1. Sklonuj repozytorium: `git clone`                                                                       
-2. Zainstaluj wymagane biblioteki: `pip install pygame`
-3. Uruchom trening: `python -m train.train` lub skorzystaj z gotowych modeli w folderze `model4`
-4. Uruchom program z poziomu `main.py`
+1. Sklonuj repozytorium: `git clone`
+```bash
+git clone git@github.com:Nicram123/pacman_Reinforcement_Learning.git
+```                                                                      
+3. Zainstaluj wymagane biblioteki: `pip install pygame`
+4. Uruchom trening: `python -m train.train` lub skorzystaj z gotowych modeli w folderze `model4`
+5. Uruchom program z poziomu `main.py`
+```bash
+python main.py
+```
 ## Trening
 Trening Pacmana odbywa się w kilku etapach:
 * Początkowo Pacman uczy się poruszania po planszy bez duchów.
